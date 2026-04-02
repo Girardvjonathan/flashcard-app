@@ -33,7 +33,6 @@
 │ id         TEXT  PK │
 │ name       TEXT     │
 │ email      TEXT  UQ │
-│ emailVerified DATE  │
 │ image      TEXT     │
 └──────────┬──────────┘
            │ 1
@@ -68,7 +67,6 @@
 │ id          UUID PK │
 │ name        TEXT    │
 │ description TEXT?   │
-│ visibility  ENUM    │  ← PRIVATE only in v1
 │ userId      FK→user │
 │ createdAt   DATE    │
 │ updatedAt   DATE    │
@@ -111,9 +109,8 @@
 NextAuth v5 requires these tables (generated via Prisma adapter):
 
 ```
-accounts        → OAuth account links (provider, tokens)
-sessions        → Active user sessions (sessionToken, expires)
-verification_tokens → Email verification (not used in v1 — Google OAuth only)
+accounts  → OAuth account links (provider, tokens)
+sessions  → Active user sessions (sessionToken, expires)
 ```
 
 ### Key Design Decisions
@@ -122,7 +119,6 @@ verification_tokens → Email verification (not used in v1 — Google OAuth only
 - **`collection_tags`** (join table): collection membership is derived at query time — any flashcard whose tags overlap with the collection's tags is included. No denormalized list is stored.
 - **`study_answers.correct`** is nullable — `null` means "not yet marked", `true`/`false` means the user explicitly marked it. This distinguishes "skipped rating" from "marked wrong".
 - **`study_answers.note`** is stored on the answer row (not a separate table) — one note per card is a hard constraint in v1.
-- **`collections.visibility`** is modeled now so the column exists in the DB, but the UI hides it in v1.
 
 ---
 

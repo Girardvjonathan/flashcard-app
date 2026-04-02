@@ -77,7 +77,6 @@ A personal web application for creating and studying flashcards. Users sign in w
 | id | uuid | |
 | name | string | required |
 | description | text | optional |
-| visibility | enum | `PRIVATE` only in v1 (field hidden in UI) |
 | userId | FK → User | |
 | tags | Tag[] | many-to-many — flashcards matched by union |
 | createdAt | datetime | |
@@ -254,7 +253,7 @@ The project ships in four slices, each independently deployable and usable.
 |---|---|
 | Flashcard types: boolean, list | UI changes required for answer input |
 | Handpicked collections | Collections where cards are added manually, not by tag |
-| Public collection browsing | Visibility field is modeled but hidden in v1 |
+| Public collection browsing | All collections are private in v1 |
 | Resumable sessions | Would require persisting in-progress session state |
 | AI answer scoring | Auto-mark correct/incorrect using LLM |
 | Study stats & progress | Retention curves, streak tracking, spaced repetition |
