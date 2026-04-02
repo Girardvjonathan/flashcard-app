@@ -1,7 +1,10 @@
-import { auth } from "@/lib/auth";
+import NextAuth from "next-auth";
+import { authConfig } from "@/lib/auth.config";
 import { NextResponse } from "next/server";
 
-export const proxy = auth((req) => {
+const { auth } = NextAuth(authConfig);
+
+export default auth((req) => {
   const isSignedIn = !!req.auth;
   const { pathname } = req.nextUrl;
 
@@ -21,6 +24,6 @@ export const proxy = auth((req) => {
   return NextResponse.next();
 });
 
-export const proxyConfig = {
+export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };
