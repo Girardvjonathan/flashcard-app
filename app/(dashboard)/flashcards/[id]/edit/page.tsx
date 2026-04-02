@@ -12,10 +12,13 @@ export default async function EditFlashcardPage({ params }: Props) {
   const session = await auth();
   const userId = session!.user!.id!;
 
-  const flashcard = await db.flashcard.findFirst({
-    where: { id, userId },
-    include: { flashcardTags: { include: { tag: true } } },
-  });
+  const [flashcard, allTags] = await Promise.all([
+    db.flashcard.findFirst({
+      where: { id, userId },
+      include: { flashcardTags: { include: { tag: true } } },
+    }),
+    db.tag.findMany({ where: { userId }, orderBy: { name: "asc" } }),
+  ]);
 
   if (!flashcard) notFound();
 
@@ -35,7 +38,7 @@ export default async function EditFlashcardPage({ params }: Props) {
           Update question, answer, context, or tags.
         </p>
       </div>
-      <FlashcardForm flashcard={data} />
+      <FlashcardForm flashcard={data} existingTags={allTags.map((t) => t.name)} />
     </div>
   );
 }

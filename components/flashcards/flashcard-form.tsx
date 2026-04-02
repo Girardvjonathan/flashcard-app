@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { TagInput } from "@/components/tags/tag-input";
+import { TagSelector } from "@/components/tags/tag-selector";
 import { createFlashcard, updateFlashcard } from "@/actions/flashcards";
 
 interface FlashcardFormProps {
@@ -18,9 +18,10 @@ interface FlashcardFormProps {
     context: string | null;
     tags: string[];
   };
+  existingTags?: string[];
 }
 
-export function FlashcardForm({ flashcard }: FlashcardFormProps) {
+export function FlashcardForm({ flashcard, existingTags = [] }: FlashcardFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -112,7 +113,7 @@ export function FlashcardForm({ flashcard }: FlashcardFormProps) {
 
       <div className="space-y-1.5">
         <Label>Tags</Label>
-        <TagInput value={tags} onChange={setTags} />
+        <TagSelector value={tags} onChange={setTags} existingTags={existingTags} />
       </div>
 
       {errors.form ? (

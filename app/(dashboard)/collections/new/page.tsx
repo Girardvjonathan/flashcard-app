@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { FlashcardForm } from "@/components/flashcards/flashcard-form";
+import { CollectionForm } from "@/components/collections/collection-form";
 
-export default async function NewFlashcardPage() {
+export default async function NewCollectionPage() {
   const session = await auth();
   const userId = session!.user!.id!;
 
@@ -14,12 +14,12 @@ export default async function NewFlashcardPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">New flashcard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">New collection</h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          Add a question, answer, and optional tags.
+          Group flashcards by selecting matching tags.
         </p>
       </div>
-      <FlashcardForm existingTags={tags.map((t) => t.name)} />
+      <CollectionForm existingTags={tags.map((t) => t.name)} />
     </div>
   );
 }
