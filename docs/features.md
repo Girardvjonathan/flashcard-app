@@ -114,3 +114,5 @@ A web application for creating and studying flashcards. Users sign in via Google
   - flashcard soft delete for ongoing study session and public collection modification concurrency
 - AI Tool to help create flashcard from study notes following principle from Ultralearning - Scott H Young
 - filter on the flashcard page
+- Better UX, add flashcard from a collection with autofilled tag
+- Specifying study session max number of flashcard

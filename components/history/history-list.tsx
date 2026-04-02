@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle2, Clock } from "lucide-react";
 import type { HistorySession } from "@/lib/history";
@@ -28,6 +28,7 @@ function formatDuration(start: Date, end: Date): string {
 }
 
 export function HistoryList({ sessions }: HistoryListProps) {
+  const router = useRouter();
   if (sessions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -69,18 +70,12 @@ export function HistoryList({ sessions }: HistoryListProps) {
               <motion.tr
                 key={s.id}
                 variants={item}
-                className={`border-b border-border/30 last:border-0 hover:bg-muted/20 transition-colors ${
+                onClick={() => router.push(`/history/${s.id}`)}
+                className={`border-b border-border/30 last:border-0 hover:bg-muted/20 transition-colors cursor-pointer ${
                   i % 2 === 1 ? "bg-muted/10" : ""
                 }`}
               >
-                <td className="px-4 py-3">
-                  <Link
-                    href={`/history/${s.id}`}
-                    className="font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    {s.collectionName}
-                  </Link>
-                </td>
+                <td className="px-4 py-3 font-medium text-foreground">{s.collectionName}</td>
                 <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                   {new Date(s.startedAt).toLocaleDateString("en-US", {
                     month: "short",
