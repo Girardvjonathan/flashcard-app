@@ -111,3 +111,4 @@ A web application for creating and studying flashcards. Users sign in via Google
 - Browsing or selecting public collections
 - Flashcard types other than `text` (boolean, list)
 - Public collection visibility controls
+  - flashcard soft delete for ongoing study session and public collection modification concurrency
