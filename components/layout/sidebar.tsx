@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { BookOpen, LayoutGrid, History } from "lucide-react";
+import { BookOpen, LayoutGrid, History, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/flashcards", label: "Flashcards", icon: BookOpen },
   { href: "/collections", label: "Collections", icon: LayoutGrid },
+  { href: "/study/new", label: "Study", icon: GraduationCap, activePrefix: "/study" },
   { href: "/history", label: "History", icon: History },
 ];
 
@@ -21,8 +22,9 @@ export function Sidebar() {
         <span className="text-lg font-semibold tracking-tight text-foreground">🃏 Flashcards</span>
       </div>
       <nav className="flex flex-col gap-1">
-        {navItems.map(({ href, label, icon: Icon }) => {
-          const isActive = pathname === href || pathname.startsWith(href + "/");
+        {navItems.map(({ href, label, icon: Icon, activePrefix }) => {
+          const prefix = activePrefix ?? href;
+          const isActive = pathname === href || pathname.startsWith(prefix + "/");
           return (
             <Link key={href} href={href} className="relative">
               {isActive && (

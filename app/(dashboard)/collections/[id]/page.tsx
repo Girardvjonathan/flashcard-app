@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { StartStudyButton } from "@/components/study/start-study-button";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -53,13 +54,18 @@ export default async function CollectionDetailPage({ params }: Props) {
             ))}
           </div>
         </div>
-        <Link
-          href={`/collections/${id}/edit`}
-          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-2 shrink-0")}
-        >
-          <Pencil className="h-3.5 w-3.5" />
-          Edit
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          {flashcards.length > 0 && (
+            <StartStudyButton collectionId={id} className="gap-2" />
+          )}
+          <Link
+            href={`/collections/${id}/edit`}
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-2")}
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </Link>
+        </div>
       </div>
 
       <div className="space-y-2">
