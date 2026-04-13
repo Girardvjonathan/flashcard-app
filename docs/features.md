@@ -109,6 +109,7 @@ A web application for creating and studying flashcards. Users sign in via Google
 - AI-assisted answer validation / auto-scoring
 - Resumable study sessions
 - Browsing or selecting public collections
+  -> seed for public collection based on books (ex: system design)
 - Flashcard types other than `text` (boolean, list)
 - Public collection visibility controls
   - flashcard soft delete for ongoing study session and public collection modification concurrency
