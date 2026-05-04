@@ -5,20 +5,45 @@ import { db } from "@/lib/db";
 import { buttonVariants } from "@/lib/button-variants";
 import { cn } from "@/lib/utils";
 import { FlashcardList } from "@/components/flashcards/flashcard-list";
+import { FlashcardSearch } from "@/components/flashcards/flashcard-search";
 
-export default async function FlashcardsPage() {
+interface Props {
+  searchParams: Promise<{ q?: string; tags?: string }>;
+}
+
+export default async function FlashcardsPage({ searchParams }: Props) {
   const session = await auth();
   const userId = session!.user!.id!;
 
-  const flashcards = await db.flashcard.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    include: {
-      flashcardTags: {
-        include: { tag: true },
+  const { q, tags: tagsParam } = await searchParams;
+  const selectedTags = tagsParam ? tagsParam.split(",").filter(Boolean) : [];
+  const isFiltered = Boolean(q || selectedTags.length);
+
+  const [flashcards, allTagRecords] = await Promise.all([
+    db.flashcard.findMany({
+      where: {
+        userId,
+        ...(q && {
+          OR: [
+            { question: { contains: q, mode: "insensitive" } },
+            { answer: { contains: q, mode: "insensitive" } },
+          ],
+        }),
+        ...(selectedTags.length > 0 && {
+          AND: selectedTags.map((tag) => ({
+            flashcardTags: { some: { tag: { name: tag } } },
+          })),
+        }),
       },
-    },
-  });
+      orderBy: { createdAt: "desc" },
+      include: { flashcardTags: { include: { tag: true } } },
+    }),
+    db.tag.findMany({
+      where: { userId },
+      orderBy: { name: "asc" },
+      select: { name: true },
+    }),
+  ]);
 
   const data = flashcards.map((fc) => ({
     id: fc.id,
@@ -27,13 +52,16 @@ export default async function FlashcardsPage() {
     tags: fc.flashcardTags.map((ft) => ft.tag.name),
   }));
 
+  const allTags = allTagRecords.map((t) => t.name);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Flashcards</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {flashcards.length} {flashcards.length === 1 ? "card" : "cards"}
+            {data.length} {data.length === 1 ? "card" : "cards"}
+            {isFiltered && " found"}
           </p>
         </div>
         <Link href="/flashcards/new" className={cn(buttonVariants(), "gap-2")}>
@@ -41,7 +69,12 @@ export default async function FlashcardsPage() {
           New flashcard
         </Link>
       </div>
-      <FlashcardList flashcards={data} />
+      <FlashcardSearch
+        allTags={allTags}
+        currentQ={q ?? ""}
+        currentTags={selectedTags}
+      />
+      <FlashcardList flashcards={data} isFiltered={isFiltered} />
     </div>
   );
 }

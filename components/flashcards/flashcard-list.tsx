@@ -12,6 +12,7 @@ interface Flashcard {
 
 interface FlashcardListProps {
   flashcards: Flashcard[];
+  isFiltered?: boolean;
 }
 
 const container = {
@@ -26,13 +27,19 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" as const } },
 };
 
-export function FlashcardList({ flashcards }: FlashcardListProps) {
+export function FlashcardList({ flashcards, isFiltered = false }: FlashcardListProps) {
   if (flashcards.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="text-5xl mb-4">🃏</div>
-        <p className="text-lg font-medium text-foreground mb-1">No flashcards yet</p>
-        <p className="text-sm text-muted-foreground">Create your first flashcard to get started.</p>
+        <div className="text-5xl mb-4">{isFiltered ? "🔍" : "🃏"}</div>
+        <p className="text-lg font-medium text-foreground mb-1">
+          {isFiltered ? "No flashcards match your search" : "No flashcards yet"}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {isFiltered
+            ? "Try adjusting your search or clearing the filters."
+            : "Create your first flashcard to get started."}
+        </p>
       </div>
     );
   }
